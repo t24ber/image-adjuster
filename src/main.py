@@ -1,12 +1,71 @@
 import os
 from PIL import Image
 
+
 def rename_file(filename, new_filename):
 	if len(new_filename.split(".")) >= 2:
 		os.rename(f"input/{filename}", f"output/{new_filename}")
+		print(f"====> Renamed {filename} to {new_filename}")
 	else:
 		print(f"extension missing: {new_filename}")
 
-def resize_file(filename, width, height):
+def resize_image(filename, new_dimensions):
+
 	with Image.open(f"input/{filename}") as image:
+
+		if len(new_dimensions) == 2:
+
+			width = new_dimensions[0]
+			height = new_dimensions[1]
+
+		else:
+
+			width = new_dimensions[0]
+			height = int(width * (image.height/image.width))
+
 		image.resize((width, height)).save(f"output/{filename}")
+		print(f"====> Resized {filename} to {filename}({width}, {height})")
+		os.remove(f"input/{filename}")
+
+
+if __name__ == "__main__":
+
+	print("image-adjuster:\n")
+
+	for filename in os.listdir("input"):
+		if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
+			print(filename)
+
+	print("\n1. rename files")
+	print("2. resize images")
+
+	mode = int(input("\nEnter number: "))
+
+	if mode == 1:
+
+		print("\nimage-adjuster ... rename files:\n")
+
+		for filename in os.listdir("input"):
+			if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
+					new_filename = f"{input(f"Rename {filename} to: ")}{os.path.splitext(filename)[1]}"
+					if not new_filename.startswith("."):
+						rename_file(filename, new_filename)
+
+		print("\nDone!")
+
+	elif mode == 2:
+
+		print("\nimage-adjuster ... resize images:\n")
+
+		for filename in os.listdir("input"):
+			if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
+				with Image.open(f"input/{filename}") as image:
+					new_dimensions = f"{input(f"Resize {filename}({image.width}, {image.height}) to: ")}"
+					if new_dimensions != "":
+						new_dimensions = [int(new_dimension) for new_dimension in new_dimensions.split(",")]
+						resize_image(filename, new_dimensions)
+
+		print("\nDone!")
+
+	else:
+		print(f"{mode} wasn't a mode")
