@@ -25,28 +25,32 @@ def resize_image(filename, new_dimensions):
 		os.remove(f"input/{filename}")
 
 
+def check_extension(filename):
+	return filename.endswith((".jpg", ".jpeg", ".png", ".webp"))
+
+
 if __name__ == "__main__":
 
 	print("image-adjuster:\n")
 
 	for filename in os.listdir("input"):
-		if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
+		if check_extension(filename):
 			print(filename)
 
-	print("\n1. rename files")
+	print("\n1. rename images")
 	print("2. resize images")
 
 	mode = int(input("\nEnter number: "))
 
 	if mode == 1:
 
-		print("\nimage-adjuster ... rename files:\n")
+		print("\nimage-adjuster ... rename images:\n")
 
 		for filename in os.listdir("input"):
-			if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
-					new_filename = f"{input(f"Rename {filename} to: ")}{os.path.splitext(filename)[1]}"
-					if not new_filename.startswith("."):
-						rename_file(filename, new_filename)
+			if check_extension(filename):
+				new_filename = f"{input(f"Rename {filename} to: ")}{os.path.splitext(filename)[1]}"
+				if not new_filename.startswith("."):
+					rename_file(filename, new_filename)
 
 		print("\nDone!")
 
@@ -55,7 +59,7 @@ if __name__ == "__main__":
 		print("\nimage-adjuster ... resize images:\n")
 
 		for filename in os.listdir("input"):
-			if filename.endswith((".jpg", ".jpeg", ".png", ".webp")):
+			if check_extension(filename):
 				with Image.open(f"input/{filename}") as image:
 					new_dimensions = f"{input(f"Resize {filename}({image.width}, {image.height}) to: ")}"
 					if new_dimensions != "":
