@@ -2,7 +2,11 @@ import os
 from PIL import Image
 
 
-def rename_file(filename, new_filename):
+def check_extension(filename):
+	return filename.endswith((".jpg", ".jpeg", ".png", ".webp"))
+
+
+def rename_image(filename, new_filename):
 	os.rename(f"input/{filename}", f"output/{new_filename}")
 	print(f"====> Renamed {filename} to {new_filename}")
 
@@ -23,10 +27,6 @@ def resize_image(filename, new_dimensions):
 		image.resize((width, height)).save(f"output/{filename}")
 		print(f"====> Resized {filename} to {filename}({width}, {height})")
 		os.remove(f"input/{filename}")
-
-
-def check_extension(filename):
-	return filename.endswith((".jpg", ".jpeg", ".png", ".webp"))
 
 
 if __name__ == "__main__":
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 			if check_extension(filename):
 				new_filename = f"{input(f"Rename {filename} to: ")}{os.path.splitext(filename)[1]}"
 				if not new_filename.startswith("."):
-					rename_file(filename, new_filename)
+					rename_image(filename, new_filename)
 
 		print("\nDone!")
 
